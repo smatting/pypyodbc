@@ -607,13 +607,21 @@ def dt_cvt(x):
 
 def Decimal_cvt(x):
     if py_v3:
-        x = x.decode('ascii')    
-    return Decimal(x)
-    
+        x = x.decode('ascii')
+    else:
+        # TODO: is this okay?
+        x = x.replace(',', '.')
+        return Decimal(x)
+
+def float_cvt(x):
+    x = x.replace(',', '.')
+    return float(x)
+
 bytearray_cvt = bytearray
 if sys.platform == 'cli':
     bytearray_cvt = lambda x: bytearray(buffer(x))
     
+
 # Below Datatype mappings referenced the document at
 # http://infocenter.sybase.com/help/index.jsp?topic=/com.sybase.help.sdk_12.5.1.aseodbc/html/aseodbc/CACFDIGH.htm
 
