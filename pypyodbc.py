@@ -972,13 +972,17 @@ def ctrl_err(ht, h, val_ret, ansi):
     Buffer_len = c_short()
     err_list = []
     number_errors = 1
-    
+
     while 1:
         ret = ODBC_func(ht, h, number_errors, state, \
             ADDR(NativeError), Message, 1024, ADDR(Buffer_len))
         if ret == SQL_NO_DATA_FOUND:
             #No more data, I can raise
             #print(err_list[0][1])
+            # TODO: if len( err_list ) == 0 does this mean no error occured?
+            #       is this workaround okay?
+            if len(err_list) == 0:
+                break
             state = err_list[0][0]
             err_text = raw_s('[')+state+raw_s('] ')+err_list[0][1]
             if state[:2] in (raw_s('24'),raw_s('25'),raw_s('42')):
