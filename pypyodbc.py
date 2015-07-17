@@ -493,7 +493,10 @@ def UTF16_BE_dec(buffer):
     while True:
         # TODO: verify that this condition correctly identifies
         # a surrogate pair in UTF-16 BE
-        if ord(buffer.raw[i+1]) & 0xd0 == 0xd0:
+        #TODO: py3 fix
+        if py_v3: buf = buffer.raw[i+1]
+        else: buf = ord(buffer.raw[i+1])
+        if buf & 0xd0 == 0xd0:
             n = 2
         else:
             n = 1
@@ -1792,7 +1795,10 @@ class Cursor:
                 if ret != SQL_SUCCESS:
                     check_success(self, ret)
 
-            col_name = Cname.value
+            #TODO: py3 fix
+            if py_v3: col_name = Cname.raw.decode('utf16').split('\x00')[0]
+            else: col_name = Cname.value
+
             if lowercase:
                 col_name = col_name.lower()
             #(name, type_code, display_size,
@@ -1919,6 +1925,8 @@ class Cursor:
 
                 if raw_data_parts != []:
                     if py_v3:
+                        #TODO: py3 fix
+                        raw_data_parts = ''.join([a if type(a) == str else a.decode('utf8') for a in raw_data_parts])
                         if target_type != SQL_C_BINARY:
                             raw_value = ''.join(raw_data_parts)
                         else:
