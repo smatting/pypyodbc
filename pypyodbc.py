@@ -617,6 +617,8 @@ def Decimal_cvt(x):
         return Decimal(x)
 
 def float_cvt(x):
+    if py_v3:
+        x = x.decode('ascii')
     x = x.replace(',', '.')
     return float(x)
 
