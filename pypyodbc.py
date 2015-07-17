@@ -614,7 +614,7 @@ def Decimal_cvt(x):
     else:
         # TODO: is this okay?
         x = x.replace(',', '.')
-        return Decimal(x)
+    return Decimal(x)
 
 def float_cvt(x):
     if py_v3:
